@@ -16,6 +16,5 @@ class EnemyController {
   }
 
   update() {
-    console.log(this.sprite.body.velocity);
   }
 }

@@ -37,6 +37,7 @@ var create = function(){
   Nakama.keyboard = Nakama.game.input.keyboard;
 
   Nakama.bulletGroup = Nakama.game.add.physicsGroup();
+  Nakama.enemyGroup = Nakama.game.add.physicsGroup();
   Nakama.playerGroup = Nakama.game.add.physicsGroup();
 
   Nakama.players = [];
@@ -60,11 +61,14 @@ var create = function(){
       cooldown: 0.2
     })
   );
+
+  Nakama.enemies = [];
   Nakama.players.push(
-    new EnemyController(200, 200, "EnemyType1.png")
-  );
-  Nakama.players.push(
-    new EnemyController(600, 300, "EnemyType1.png")
+    new EnemyController(200, 200, "EnemyType1.png", {
+      minX : 100,
+      maxX : 540,
+      tweenTime : 3
+    })
   );
 }
 

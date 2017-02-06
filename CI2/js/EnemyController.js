@@ -8,13 +8,18 @@ class EnemyController {
     );
 
     this.sprite.anchor = new Phaser.Point(0.5, 0.5);
-    this.sprite.body.collideWorldBounds = true;
-    this.sprite.body.bounce.set(1);
-    this.sprite.body.velocity = new Phaser.Point(Nakama.configs.enemySpeed, 0);
 
     this.configs = configs;
+    this.timeSinceSpawn = 0;
+    this.configs.centerX = (this.configs.minX + this.configs.maxX)/2;
+    this.configs.movementDistance = (this.configs.maxX - this.configs.minX)/2;
   }
 
   update() {
+    this.timeSinceSpawn += Nakama.game.time.physicsElapsed;
+    this.sprite.position.x =
+      this.configs.centerX
+      + this.configs.movementDistance
+      * Math.sin(Math.PI*2*this.timeSinceSpawn/this.configs.tweenTime);
   }
 }

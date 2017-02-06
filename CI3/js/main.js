@@ -1,8 +1,7 @@
 var Nakama = {};
 Nakama.configs = {
-  bulletSpeed : 1000,
-  shipSpeed : 500,
-  enemySpeed : 600
+  bulletSpeed : 1500,
+  shipSpeed   : 500
 };
 
 window.onload = function(){
@@ -35,71 +34,58 @@ var preload = function(){
 var create = function(){
   Nakama.game.physics.startSystem(Phaser.Physics.ARCADE);
   Nakama.keyboard = Nakama.game.input.keyboard;
-
-  Nakama.bulletGroup = Nakama.game.add.physicsGroup();
+  Nakama.playerBulletGroup = Nakama.game.add.physicsGroup();
+  Nakama.enemyBulletGroup = Nakama.game.add.physicsGroup();
   Nakama.enemyGroup = Nakama.game.add.physicsGroup();
   Nakama.playerGroup = Nakama.game.add.physicsGroup();
 
   Nakama.players = [];
   Nakama.players.push(
-    new ShipController(400, 800, "Spaceship1-Player.png", {
-      up: Phaser.Keyboard.UP,
-      down: Phaser.Keyboard.DOWN,
-      left: Phaser.Keyboard.LEFT,
-      right: Phaser.Keyboard.RIGHT,
-      fire: Phaser.Keyboard.NUMPAD_DECIMAL,
-      cooldown: 0.2,
-      frameNameDefault: "Spaceship1-Player.png",
-      frameNameLeft: "Spaceship1Left-Player.png",
-      frameNameRight: "Spaceship1Right-Player.png",
-    })
+    new ShipType1Controller(200,400,{})
   );
+
   Nakama.players.push(
-    new ShipController(200, 800, "Spaceship1-Partner.png", {
-      up: Phaser.Keyboard.W,
-      down: Phaser.Keyboard.S,
-      left: Phaser.Keyboard.A,
-      right: Phaser.Keyboard.D,
-      fire: Phaser.Keyboard.SPACEBAR,
-      cooldown: 0.2,
-      frameNameDefault: "Spaceship1-Partner.png",
-      frameNameLeft: "Spaceship1Left-Partner.png",
-      frameNameRight: "Spaceship1Right-Partner.png",
-    })
+    new ShipType2Controller(400,400,{})
+  );
+
+  Nakama.players.push(
+    new ShipType3Controller(200,700,{})
   );
 
   Nakama.enemies = [];
   Nakama.enemies.push(
-    new EnemyController(200, 200, "EnemyType1.png", {
-      minX : 100,
-      maxX : 540,
+    new EnemyController(320, 100, "EnemyType1.png",{
+      minX      : 100,
+      maxX      : 540,
       tweenTime : 3,
-      health : 10,
-      cooldown : 0.5
+      health    : 10,
+      cooldown  : 0.3
     })
   );
 }
 
 // update game state each frame
 var update = function(){
-  for (var i = 0; i < Nakama.players.length; i++) {
+  for(var i=0;i<Nakama.players.length;i++){
     Nakama.players[i].update();
   }
 
-  for (var i = 0; i < Nakama.enemies.length; i++) {
+  for(var i=0;i<Nakama.enemies.length;i++){
     Nakama.enemies[i].update();
   }
 
-  Nakama.game.physics.arcade.overlap(Nakama.bulletGroup, Nakama.enemyGroup, onBulletHitEnemy);
+  Nakama.game.physics.arcade.overlap(Nakama.playerBulletGroup, Nakama.enemyGroup, onBulletHitActor);
+  Nakama.game.physics.arcade.overlap(Nakama.enemyBulletGroup, Nakama.playerGroup, onBulletHitActor);
 }
 
 // before camera render (mostly for debug)
 var render = function(){
-
+  // Nakama.playerGroup.forEachAlive(function(sprite){
+  //   Nakama.game.debug.body(sprite);
+  // })
 }
 
-var onBulletHitEnemy = function(bulletSprite, enemySprite){
-  enemySprite.damage(1);
+var onBulletHitActor = function(bulletSprite, actorSprite){
+  actorSprite.damage(1);
   bulletSprite.kill();
-  console.log(enemySprite.health);
 }

@@ -1,0 +1,1 @@
+var a=function(){console.log("test js")},x=100;

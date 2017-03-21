@@ -15,11 +15,8 @@ var User = new mongoose.Schema({
     type : String,
     required : true
   },
-  email : {
-    type : String,
-    required : true,
-    unique : true
-  },
+  salt: String,
+  email : String,
   created : [ {type : mongoose.Schema.Types.ObjectId, ref : 'Course'}]
 });
 
